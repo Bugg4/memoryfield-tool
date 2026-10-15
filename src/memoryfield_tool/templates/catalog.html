@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ heading }}</h1>
+<table>
+  <thead>
+    <tr>
+      {% if show_field %}<th>Field</th>{% endif %}
+      <th>Page</th>
+      <th>Summary</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+    <tr>
+      {% if show_field %}<td><a href="/{{ r.field }}/catalog">{{ r.field }}</a></td>{% endif %}
+      <td><a href="/{{ r.field }}/{{ r.page }}">{{ r.title }}</a></td>
+      <td>{{ r.summary or "—" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

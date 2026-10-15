@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+{% if q %}
+{% include "_search_form.html" %}
+{% if results %}
+{% for r in results %}
+<article class="serp-result">
+  <p><a href="/{{ r.field }}/{{ r.page }}">{{ r.title }}</a></p>
+  <p><small>/{{ r.field }}/{{ r.page }}</small></p>
+  {% if r.summary %}<p>{{ r.summary }}</p>{% endif %}
+  {% if r.distance is not none %}<p><small>(distance {{ "%.3f"|format(r.distance) }})</small></p>{% endif %}
+</article>
+{% endfor %}
+{% else %}
+<p>No matching results found.</p>
+{% endif %}
+{% else %}
+<div class="search-home">
+  <h1>Memoryfields</h1>
+  {% include "_search_form.html" %}
+</div>
+<h2>Fields</h2>
+<ul>
+  {% for f in fields %}
+  <li><a href="/{{ f.name }}/">{{ f.name }}</a> — {{ f.count }} pages</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
