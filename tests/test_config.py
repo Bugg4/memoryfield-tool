@@ -21,6 +21,7 @@ def test_migrates_legacy_config(monkeypatch, tmp_path):
     monkeypatch.delenv("MEMORYFIELD_TOOL_CONFIG", raising=False)
     home = tmp_path / "home"
     monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "config"))
     legacy = Path("~/.config/memoryfield-tool.toml").expanduser()
     legacy.parent.mkdir(parents=True)
     legacy.write_text(
@@ -39,6 +40,7 @@ def test_env_override_skips_migration(monkeypatch, tmp_path, capsys):
     monkeypatch.setenv("MEMORYFIELD_TOOL_CONFIG", str(cfg_path))
     home = tmp_path / "home"
     monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "config"))
     legacy = Path("~/.config/memoryfield-tool.toml").expanduser()
     legacy.parent.mkdir(parents=True)
     legacy.write_text(

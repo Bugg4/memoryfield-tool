@@ -112,6 +112,7 @@ def test_edit_requires_terminal_without_editor(cli_runner, connected, monkeypatc
 def test_edit_uses_editor_env(cli_runner, connected, editor_script, monkeypatch):
     _cfg_path, field_path = connected
     script = editor_script('echo "EDITED" >> "$1"')
+    monkeypatch.delenv("VISUAL", raising=False)
     monkeypatch.setenv("EDITOR", str(script))
     result = cli_runner.invoke(cli.cli, ["edit", "alpha.md"])
     assert result.exit_code == 0
@@ -134,6 +135,7 @@ def test_edit_visual_precedes_editor(cli_runner, connected, editor_script, monke
 def test_edit_editor_with_args(cli_runner, connected, editor_script, monkeypatch):
     _cfg_path, field_path = connected
     script = editor_script('for last; do :; done\necho "EDITED" >> "$last"')
+    monkeypatch.delenv("VISUAL", raising=False)
     monkeypatch.setenv("EDITOR", f"{script} --flag")
     result = cli_runner.invoke(cli.cli, ["edit", "alpha.md"])
     assert result.exit_code == 0
