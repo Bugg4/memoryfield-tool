@@ -26,9 +26,12 @@ or, to run from source:
 uv run memoryfield-tool --help
 ```
 
-Requires Python 3.12+.  Semantic search needs a local
-[ollama](https://ollama.com) with `nomic-embed-text` pulled; everything else
-works without it (search falls back to substring matching).
+Requires Python 3.12+.  Semantic search needs an embedding model served
+locally: by default a local [ollama](https://ollama.com) with
+`nomic-embed-text` pulled, or an OpenAI-compatible embeddings server (such as
+llama.cpp's `llama-server`) configured via `MEMORYFIELD_EMBED_BASE_URL` — see
+[Embedding backend](#embedding-backend).  Everything else works without it
+(search falls back to substring matching).
 
 ## Commands
 
@@ -212,6 +215,26 @@ index_location = "cache"
 `create` and `connect` add entries; `endpoint_url`, `region`, and
 `index_location` are emitted only when set (legacy configs stay
 byte-compatible).
+
+## Embedding backend
+
+`search` and `index` embed text with `nomic-embed-text-v1.5` (768 dimensions;
+the vector-index filename is derived from that model code).
+
+By default embeddings are requested from the local Ollama API, where
+`nomic-embed-text` must be pulled.  To use an OpenAI-compatible embeddings
+server instead — llama.cpp's `llama-server --embeddings`, LM Studio, vLLM and
+similar — export:
+
+```sh
+export MEMORYFIELD_EMBED_BASE_URL=http://127.0.0.1:8090/v1  # include /v1 when the server expects it
+export MEMORYFIELD_EMBED_MODEL=nomic-embed-text-v1.5       # optional; sent as the request's model name
+```
+
+Setting `MEMORYFIELD_EMBED_BASE_URL` switches the backend; requests are
+`POST {base_url}/embeddings` with a batch `input`.  Use a model equivalent to
+`nomic-embed-text-v1.5`: the index filename does not depend on the backend, so
+mixing different embedding models in one index silently degrades results.
 
 ## Vector index
 

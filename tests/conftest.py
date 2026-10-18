@@ -1,14 +1,19 @@
 import hashlib
+import os
 import urllib.request
 from pathlib import Path
 
 import pytest
 from click.testing import CliRunner
 
+OLLAMA_URL = "http://127.0.0.1:11434/api/tags"
 
-def ollama_available() -> bool:
+
+def embedding_available() -> bool:
+    base_url = os.environ.get("MEMORYFIELD_EMBED_BASE_URL", "").strip()
+    url = base_url.rstrip("/") + "/models" if base_url else OLLAMA_URL
     try:
-        with urllib.request.urlopen("http://127.0.0.1:11434/api/tags", timeout=1) as resp:
+        with urllib.request.urlopen(url, timeout=2) as resp:
             return resp.status == 200
     except Exception:
         return False

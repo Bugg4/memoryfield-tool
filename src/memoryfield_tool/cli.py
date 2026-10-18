@@ -998,7 +998,7 @@ def index_cmd(field_name: str | None) -> None:
             click.echo(f"error: memoryfield {field.name}: {e}", err=True)
             continue
         if not embed_ok:
-            click.echo(f"{field.name}: embedding unavailable (is ollama running?)")
+            click.echo(f"{field.name}: embedding unavailable (is the embedding server running?)")
         elif indexed or removed:
             parts = []
             if indexed:

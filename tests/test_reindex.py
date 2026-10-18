@@ -4,7 +4,7 @@ import time
 
 import pysqlite3 as sqlite3
 import pytest
-from conftest import ollama_available
+from conftest import embedding_available
 
 from memoryfield_tool import config, fields, reindex
 
@@ -70,7 +70,7 @@ def test_spawn_skipped_for_empty_unknown_field(monkeypatch, config_env, tmp_path
     assert calls == []
 
 
-@pytest.mark.skipif(not ollama_available(), reason="needs local ollama")
+@pytest.mark.skipif(not embedding_available(), reason="needs a local embedding server")
 def test_background_reindex_e2e(cli_runner, config_env, tmp_path, monkeypatch):
     from memoryfield_tool import cli
 
